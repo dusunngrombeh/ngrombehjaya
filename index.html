@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dusun Ngrombeh - Desa Klopo, Kec. Tegalrejo, Kab. Magelang</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+          colors: {
+            emerald: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            },
+            gold: {
+              300: '#fde047',
+              400: '#facc15',
+              500: '#eab308',
+              600: '#ca8a04',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { background-color: #f8faf9; color: #1e293b; }
+    .hero-pattern {
+      background-color: #064e3b;
+      background-image: radial-gradient(rgba(250, 204, 21, 0.14) 1px, transparent 1px),
+                        linear-gradient(135deg, #064e3b 0%, #047857 60%, #065f46 100%);
+      background-size: 24px 24px, 100% 100%;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(6, 95, 70, 0.08);
+    }
+    .gold-underline {
+      position: relative;
+      display: inline-block;
+    }
+    .gold-underline::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 56px;
+      height: 4px;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #eab308, #facc15);
+    }
+    /* Skeleton Loading Animation */
+    .skeleton {
+      background: linear-gradient(90deg, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      color: transparent !important;
+      border-radius: 6px;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #059669; border-radius: 99px; }
+  </style>
+</head>
+<body class="antialiased selection:bg-gold-400 selection:text-emerald-950">
+
+  <script>
+    const DEFAULT_GAS_URL = ""; 
+  </script>
+
+  <!-- STATUS BAR SINKRONISASI -->
+  <div id="sync-banner" class="hidden bg-gold-400 text-emerald-950 text-xs font-semibold py-1.5 px-4 text-center shadow-sm">
+    <i class="fa-solid fa-rotate fa-spin mr-1.5"></i> <span id="sync-text">Menyinkronkan data dengan Google Spreadsheets...</span>
+  </div>
+
+  <!-- DEVELOPER MODE FLOATING BAR -->
+  <div id="dev-toolbar" class="hidden sticky top-0 z-50 bg-slate-900 text-white border-b-2 border-gold-400 px-4 py-2.5 shadow-xl">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5">
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-gold-400 text-slate-950 uppercase tracking-wider">
+          <i class="fa-solid fa-code mr-1"></i> Mode Developer Aktif
+        </span>
+        <span class="text-xs text-slate-300 hidden sm:inline">Perubahan disimpan langsung ke Google Spreadsheets</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="openDevModal('layout')" class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-xs font-semibold transition">
+          <i class="fa-solid fa-layer-group mr-1"></i> Tata Letak
+        </button>
+        <button onclick="openDevModal('data')" class="px-3 py-1.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-slate-950 text-xs font-bold transition">
+          <i class="fa-solid fa-pen-to-square mr-1"></i> Kelola Konten Dusun
+        </button>
+        <button onclick="openDevModal('settings')" class="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-semibold transition">
+          <i class="fa-solid fa-key mr-1"></i> Akun & Spreadsheet
+        </button>
+        <button onclick="logoutDeveloper()" class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-xs font-semibold transition">
+          <i class="fa-solid fa-right-from-bracket mr-1"></i> Keluar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <header class="bg-white/95 backdrop-blur-md sticky top-0 z-40 border-b border-emerald-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-800 to-emerald-600 flex items-center justify-center text-gold-400 shadow-md group-hover:scale-105 transition">
+          <i class="fa-solid fa-leaf text-lg"></i>
+        </div>
+        <div>
+          <span id="nav-nama-dusun" class="font-extrabold text-emerald-900 text-base sm:text-lg tracking-tight block leading-none">Dusun Ngrombeh</span>
+          <span class="text-[11px] font-medium text-emerald-600">Desa Klopo • Tegalrejo • Magelang</span>
+        </div>
+      </a>
+
+      <nav id="desktop-nav" class="hidden lg:flex items-center gap-6 text-sm font-semibold text-slate-600">
+        <a href="#sec-profil" class="hover:text-emerald-700 transition">Profil & Demografi</a>
+        <a href="#sec-rt" class="hover:text-emerald-700 transition">Persebaran RT</a>
+        <a href="#sec-keuangan" class="hover:text-emerald-700 transition">Keuangan</a>
+        <a href="#sec-umkm" class="hover:text-emerald-700 transition">UMKM</a>
+        <a href="#sec-jadwal" class="hover:text-emerald-700 transition">Kegiatan</a>
+        <a href="#sec-berita" class="hover:text-emerald-700 transition">Berita</a>
+        <a href="#sec-struktur" class="hover:text-emerald-700 transition">Struktur</a>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <button onclick="refreshFromSheet()" title="Muat Ulang Data Spreadsheet" class="p-2 rounded-lg text-emerald-700 hover:bg-emerald-50 transition text-sm">
+          <i class="fa-solid fa-arrows-rotate"></i>
+        </button>
+        <button id="mobile-menu-btn" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="lg:hidden p-2 rounded-lg text-emerald-800 hover:bg-emerald-50">
+          <i class="fa-solid fa-bars text-lg"></i>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-emerald-100 px-4 py-3 space-y-2 text-sm font-semibold text-slate-700">
+      <a href="#sec-profil" onclick="this.parentElement.classList.add('hidden')" class="block py-1.5 hover:text-emerald-700">Profil & Demografi</a>
+      <a href="#sec-rt" onclick="this.parentElement.classList.add('hidden')" class="block py-1.5 hover:text-emerald-700">Persebaran RT & KK</a>
+      <a href="#sec-keuangan" onclick="this.parentElement.classList.add('hidden')" class="block py-1.5 hover:text-emerald-700">Laporan Keuangan</a>
+      <a href="#sec-umkm" onclick="this.parentElement.classList.add('hidden')" class="block py-1.5 hover:text-emerald-700">UMKM Unggulan</a>
+      <a href="#sec-jadwal" onclick="this.parentElement.classList.add('hidden')" class="block py-1.5 hover:text-emerald-700">Jadwal Kegiatan</a>
+      <a href="#sec-berita" onclick="this.parentElement.classList.add('hidden')" class="block py-1.5 hover:text-emerald-700">Arsip Berita</a>
+      <a href="#sec-struktur" onclick="this.parentElement.classList.add('hidden')" class="block py-1.5 hover:text-emerald-700">Struktur Dusun</a>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero-pattern text-white relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 relative z-10">
+      <div class="grid lg:grid-cols-12 gap-10 items-center">
+        <div class="lg:col-span-7 space-y-5">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-gold-400/40 text-gold-300 text-xs font-semibold">
+            <i class="fa-solid fa-location-dot"></i>
+            <span id="hero-wilayah">Desa Klopo, Kec. Tegalrejo, Kab. Magelang, Jawa Tengah</span>
+          </div>
+          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+            Portal Informasi & Transparansi <span id="hero-nama-dusun" class="text-gold-400">Dusun Ngrombeh</span>
+          </h1>
+          <p id="hero-tagline" class="text-emerald-100 text-base sm:text-lg font-medium max-w-2xl">
+            Guyub Rukun, Maju Bersama, Sejahtera Warganya
+          </p>
+          <p id="hero-deskripsi" class="text-emerald-200/90 text-sm leading-relaxed max-w-2xl">
+            Dusun Ngrombeh merupakan salah satu dusun yang asri dan dinamis di wilayah Desa Klopo, Kecamatan Tegalrejo, Kabupaten Magelang.
+          </p>
+          <div class="pt-2 flex flex-wrap gap-3">
+            <a href="#sec-profil" class="px-5 py-3 rounded-xl bg-gold-400 hover:bg-gold-300 text-emerald-950 font-bold text-sm shadow-lg shadow-emerald-950/30 transition flex items-center gap-2">
+              <i class="fa-solid fa-chart-pie"></i> Data Kependudukan
+            </a>
+            <a href="#sec-keuangan" class="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/25 text-white font-semibold text-sm transition flex items-center gap-2">
+              <i class="fa-solid fa-wallet text-gold-400"></i> Transparansi Kas
+            </a>
+          </div>
+        </div>
+
+        <!-- Ringkasan Statistik Cepat di Hero (Dilengkapi Skeleton Loading) -->
+        <div class="lg:col-span-5">
+          <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-white/15 pb-3 mb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-gold-300">Ringkasan Statistik Dusun</span>
+              <span class="text-[11px] bg-emerald-950/60 px-2.5 py-0.5 rounded-full text-emerald-200">Data Terkini</span>
+            </div>
+            <div class="grid grid-cols-2 gap-3.5">
+              <div class="bg-emerald-950/50 rounded-xl p-4 border border-white/10">
+                <div class="text-gold-400 text-xl mb-1"><i class="fa-solid fa-users"></i></div>
+                <div id="stat-total-warga" class="text-2xl sm:text-3xl font-extrabold skeleton">...</div>
+                <div class="text-xs text-emerald-200">Total Penduduk (Jiwa)</div>
+              </div>
+              <div class="bg-emerald-950/50 rounded-xl p-4 border border-white/10">
+                <div class="text-gold-400 text-xl mb-1"><i class="fa-solid fa-house-user"></i></div>
+                <div id="stat-total-kk" class="text-2xl sm:text-3xl font-extrabold skeleton">...</div>
+                <div class="text-xs text-emerald-200">Kepala Keluarga (KK)</div>
+              </div>
+              <div class="bg-emerald-950/50 rounded-xl p-4 border border-white/10">
+                <div class="text-sky-300 text-xl mb-1"><i class="fa-solid fa-mars"></i></div>
+                <div id="stat-total-laki" class="text-2xl font-extrabold skeleton">...</div>
+                <div class="text-xs text-emerald-200">Laki-laki</div>
+              </div>
+              <div class="bg-emerald-950/50 rounded-xl p-4 border border-white/10">
+                <div class="text-rose-300 text-xl mb-1"><i class="fa-solid fa-venus"></i></div>
+                <div id="stat-total-perempuan" class="text-2xl font-extrabold skeleton">...</div>
+                <div class="text-xs text-emerald-200">Perempuan</div>
+              </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-white/15 flex items-center justify-between text-xs text-emerald-200">
+              <span><i class="fa-solid fa-map-pin text-gold-400 mr-1"></i> Jumlah Wilayah: <strong id="stat-total-rt" class="text-white">...</strong></span>
+              <span><i class="fa-solid fa-vault text-gold-400 mr-1"></i> Total Saldo Kas: <strong id="stat-total-kas" class="text-gold-300 skeleton">...</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main id="dynamic-sections-container" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+
+    <!-- 1. SECTION PROFIL & DEMOGRAFI DUSUN -->
+    <section id="sec-profil" data-section-id="profil" class="scroll-mt-24">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">Data Kependudukan</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-emerald-950 mt-2 gold-underline">Profil & Demografi Penduduk</h2>
+        </div>
+        <div class="flex items-center gap-3 text-xs font-semibold text-slate-600 bg-white px-4 py-2 rounded-xl border border-emerald-100 shadow-sm">
+          <span>Luas Wilayah: <strong id="info-luas" class="text-emerald-800">42,5 Ha</strong></span>
+          <span class="text-slate-300">|</span>
+          <span>Kode Pos: <strong id="info-kodepos" class="text-emerald-800">56192</strong></span>
+        </div>
+      </div>
+
+      <div id="grid-profil" class="grid lg:grid-cols-2 gap-8 items-start">
+        <div class="glass-card rounded-2xl p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-emerald-900 text-lg"><i class="fa-solid fa-table-list text-gold-500 mr-2"></i>Klasifikasi Usia Penduduk</h3>
+            <span class="text-xs text-slate-500">Terintegrasi Spreadsheet</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left border-collapse">
+              <thead>
+                <tr class="bg-emerald-800 text-white text-xs uppercase">
+                  <th class="py-3 px-4 rounded-tl-xl">Kategori Usia</th>
+                  <th class="py-3 px-3">Rentang</th>
+                  <th class="py-3 px-3 text-center">Laki-laki</th>
+                  <th class="py-3 px-3 text-center">Perempuan</th>
+                  <th class="py-3 px-4 text-right rounded-tr-xl">Jumlah</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-demografi" class="divide-y divide-emerald-50">
+                <tr><td colspan="5" class="py-4 text-center text-slate-400">Memuat data kependudukan...</td></tr>
+              </tbody>
+              <tfoot id="tfoot-demografi" class="bg-emerald-50 font-bold text-emerald-950"></tfoot>
+            </table>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 shadow-sm">
+          <h3 class="font-bold text-emerald-900 text-lg mb-4"><i class="fa-solid fa-chart-column text-gold-500 mr-2"></i>Grafik Demografi Usia & Gender</h3>
+          <div class="relative h-72 w-full">
+            <canvas id="chartDemografi"></canvas>
+          </div>
+          <div class="mt-4 grid grid-cols-2 gap-3 pt-4 border-t border-slate-100 text-center">
+            <div class="bg-sky-50 rounded-xl p-3">
+              <span class="text-xs text-sky-700 font-semibold block">Rasio Laki-laki</span>
+              <span id="persen-laki" class="text-lg font-extrabold text-sky-900">0%</span>
+            </div>
+            <div class="bg-rose-50 rounded-xl p-3">
+              <span class="text-xs text-rose-700 font-semibold block">Rasio Perempuan</span>
+              <span id="persen-perempuan" class="text-lg font-extrabold text-rose-900">0%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. SECTION PERSEBARAN WARGA & KK PER RT -->
+    <section id="sec-rt" data-section-id="rt" class="scroll-mt-24">
+      <div class="mb-8">
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">Wilayah Administratif</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-emerald-950 mt-2 gold-underline">Persebaran Warga & Kartu Keluarga per RT</h2>
+      </div>
+
+      <div id="grid-rt" class="grid lg:grid-cols-2 gap-8 items-center">
+        <div id="rt-cards-container" class="space-y-4"></div>
+        <div class="glass-card rounded-2xl p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-emerald-900 text-lg"><i class="fa-solid fa-chart-bar text-gold-500 mr-2"></i>Perbandingan KK & Warga Antar RT</h3>
+            <span id="badge-jumlah-rt" class="text-xs font-bold bg-gold-400/30 text-emerald-900 px-2.5 py-1 rounded-lg">... Wilayah RT</span>
+          </div>
+          <div class="relative h-72 w-full">
+            <canvas id="chartRT"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SECTION LAPORAN KEUANGAN & KAS DUSUN (DENGAN PAGINATION) -->
+    <section id="sec-keuangan" data-section-id="keuangan" class="scroll-mt-24">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">Transparansi Publik</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-emerald-950 mt-2 gold-underline">Laporan Keuangan & Kantong Kas Dusun</h2>
+        </div>
+        <div class="bg-gradient-to-r from-emerald-800 to-emerald-700 text-white px-5 py-3 rounded-2xl shadow-md">
+          <span class="text-xs text-emerald-200 block">Total Seluruh Saldo Kas</span>
+          <span id="keuangan-grand-total" class="text-xl sm:text-2xl font-extrabold text-gold-400">Rp 0</span>
+        </div>
+      </div>
+
+      <div id="grid-keuangan" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8"></div>
+
+      <div class="glass-card rounded-2xl p-6 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <h3 class="font-bold text-emerald-900 text-lg"><i class="fa-solid fa-money-bill-transfer text-gold-500 mr-2"></i>Riwayat Arus Kas (Masuk & Keluar)</h3>
+          <select id="filter-kantong" onchange="currentKeuanganPage=1; renderKeuangan();" class="text-xs font-semibold border border-emerald-200 rounded-xl px-3 py-2 bg-white text-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-600">
+            <option value="ALL">Semua Kantong Kas</option>
+          </select>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm text-left">
+            <thead>
+              <tr class="bg-emerald-50 text-emerald-900 text-xs uppercase border-b border-emerald-200">
+                <th class="py-3 px-4">Tanggal</th>
+                <th class="py-3 px-4">Kantong Kas</th>
+                <th class="py-3 px-4">Keterangan Transaksi</th>
+                <th class="py-3 px-4 text-center">Jenis</th>
+                <th class="py-3 px-4 text-right">Nominal</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-transaksi" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+        <!-- Paginasi Arus Kas -->
+        <div id="pagination-keuangan" class="mt-4 flex items-center justify-between pt-3 border-t border-slate-100 text-xs"></div>
+      </div>
+    </section>
+
+    <!-- 4. SECTION UMKM UNGGULAN (DENGAN PAGINATION) -->
+    <section id="sec-umkm" data-section-id="umkm" class="scroll-mt-24">
+      <div class="mb-8">
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">Ekonomi Kreatif Warga</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-emerald-950 mt-2 gold-underline">UMKM Unggulan Dusun Ngrombeh</h2>
+      </div>
+      <div id="grid-umkm" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      <!-- Paginasi UMKM -->
+      <div id="pagination-umkm" class="mt-6 flex items-center justify-between pt-4 border-t border-slate-200 text-xs"></div>
+    </section>
+
+    <!-- 5. SECTION JADWAL KEGIATAN DUSUN (DENGAN PAGINATION) -->
+    <section id="sec-jadwal" data-section-id="jadwal" class="scroll-mt-24">
+      <div class="mb-8">
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">Agenda & Gotong Royong</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-emerald-950 mt-2 gold-underline">Jadwal Kegiatan Dusun</h2>
+      </div>
+      <div id="grid-jadwal" class="grid md:grid-cols-2 gap-4"></div>
+      <!-- Paginasi Jadwal -->
+      <div id="pagination-jadwal" class="mt-6 flex items-center justify-between pt-4 border-t border-slate-200 text-xs"></div>
+    </section>
+
+    <!-- 6. SECTION ARSIP BERITA DUSUN (DENGAN PAGINATION) -->
+    <section id="sec-berita" data-section-id="berita" class="scroll-mt-24">
+      <div class="mb-8">
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">Kabar & Dokumentasi</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-emerald-950 mt-2 gold-underline">Arsip Berita & Kegiatan Warga</h2>
+      </div>
+      <div id="grid-berita" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      <!-- Paginasi Berita -->
+      <div id="pagination-berita" class="mt-6 flex items-center justify-between pt-4 border-t border-slate-200 text-xs"></div>
+    </section>
+
+    <!-- 7. SECTION STRUKTUR ORGANISASI DUSUN -->
+    <section id="sec-struktur" data-section-id="struktur" class="scroll-mt-24">
+      <div class="mb-8">
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">Perangkat & Tokoh</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-emerald-950 mt-2 gold-underline">Struktur Organisasi Dusun Ngrombeh</h2>
+      </div>
+      <div id="grid-struktur" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    </section>
+
+    <!-- 8. SECTION SOSIAL MEDIA DUSUN -->
+    <section id="sec-sosmed" data-section-id="sosmed" class="scroll-mt-24">
+      <div class="bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-950 rounded-3xl p-8 sm:p-10 text-white shadow-xl border border-gold-400/30">
+        <div class="max-w-2xl mb-6">
+          <span class="text-xs font-bold uppercase tracking-wider text-gold-400">Terhubung Dengan Kami</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold mt-1">Kanal Informasi & Sosial Media Resmi</h2>
+          <p class="text-emerald-200 text-sm mt-2">Ikuti perkembangan kegiatan, pengumuman, dan dokumentasi Dusun Ngrombeh melalui kanal resmi berikut.</p>
+        </div>
+        <div id="grid-sosmed" class="grid grid-cols-2 sm:grid-cols-4 gap-4"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-emerald-950 text-emerald-200 border-t-4 border-gold-500 mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-emerald-800/80 pb-6">
+        <div class="text-center md:text-left">
+          <h3 id="footer-nama-dusun" class="font-extrabold text-white text-lg">Dusun Ngrombeh</h3>
+          <p id="footer-wilayah" class="text-xs text-emerald-300">Desa Klopo, Kecamatan Tegalrejo, Kabupaten Magelang, Jawa Tengah</p>
+        </div>
+        <div class="text-xs text-emerald-300 text-center md:text-right">
+          Sistem Informasi Transparansi Dusun • Terintegrasi Google Spreadsheets
+        </div>
+      </div>
+      <div class="pt-5 flex items-center justify-between text-[11px] text-emerald-400/70">
+        <span>&copy; 2026 Pemerintah Dusun Ngrombeh. Hak Cipta Dilindungi.</span>
+        <button onclick="openLoginModal()" class="hover:text-gold-400 transition flex items-center gap-1 opacity-60 hover:opacity-100" title="Akses Pengelola / Developer">
+          <i class="fa-solid fa-lock text-[10px]"></i> <span>Dev</span>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL BACA BERITA LENGKAP -->
+  <div id="modal-berita-detail" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+      <img id="detail-berita-img" src="" alt="Foto Berita" class="w-full h-64 object-cover" />
+      <div class="p-6">
+        <span id="detail-berita-tgl" class="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full"></span>
+        <h3 id="detail-berita-judul" class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-3"></h3>
+        <p id="detail-berita-isi" class="text-slate-600 text-sm leading-relaxed mt-4 whitespace-pre-line"></p>
+        <div class="mt-6 text-right">
+          <button onclick="document.getElementById('modal-berita-detail').classList.add('hidden')" class="px-5 py-2 rounded-xl bg-emerald-800 text-white text-sm font-semibold hover:bg-emerald-700">Tutup Berita</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL LOGIN DEVELOPER -->
+  <div id="modal-login" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border-t-4 border-gold-400">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-extrabold text-emerald-950 text-lg"><i class="fa-solid fa-shield-halved text-gold-500 mr-2"></i>Login Developer</h3>
+        <button onclick="closeLoginModal()" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <p class="text-xs text-slate-500 mb-4">Masuk untuk mengelola isi website, tata letak, dan sinkronisasi Google Spreadsheets.</p>
+      <form onsubmit="handleLogin(event)" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Username</label>
+          <input type="text" id="login-user" required class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none" placeholder="admin" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
+          <input type="password" id="login-pass" required class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none" placeholder="••••••••" />
+        </div>
+        <div id="login-error" class="hidden text-xs text-rose-600 font-semibold bg-rose-50 p-2 rounded-lg"></div>
+        <button type="submit" id="btn-login-submit" class="w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-sm transition">
+          Masuk Mode Developer
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL PANEL DEVELOPER -->
+  <div id="modal-dev" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between border-b-2 border-gold-400">
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-lg bg-gold-400 text-slate-950 flex items-center justify-center font-bold"><i class="fa-solid fa-sliders"></i></span>
+          <div>
+            <h3 class="font-bold text-base">Panel Kontrol Developer Dusun Ngrombeh</h3>
+            <p class="text-[11px] text-slate-400">Edit data, upload foto, atur tata letak, dan simpan langsung ke Google Sheets</p>
+          </div>
+        </div>
+        <button onclick="closeDevModal()" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="bg-slate-100 px-4 py-2 border-b border-slate-200 flex flex-wrap gap-1.5 text-xs font-bold">
+        <button onclick="switchDevTab('layout')" id="tab-btn-layout" class="dev-tab-btn px-3 py-2 rounded-lg bg-emerald-800 text-white">1. Tata Letak (ON/OFF & Urutan)</button>
+        <button onclick="switchDevTab('profil')" id="tab-btn-profil" class="dev-tab-btn px-3 py-2 rounded-lg bg-white text-slate-700 hover:bg-emerald-50">2. Profil & Sosmed</button>
+        <button onclick="switchDevTab('demografi')" id="tab-btn-demografi" class="dev-tab-btn px-3 py-2 rounded-lg bg-white text-slate-700 hover:bg-emerald-50">3. Demografi Usia</button>
+        <button onclick="switchDevTab('rt')" id="tab-btn-rt" class="dev-tab-btn px-3 py-2 rounded-lg bg-white text-slate-700 hover:bg-emerald-50">4. Data RT & KK</button>
+        <button onclick="switchDevTab('keuangan')" id="tab-btn-keuangan" class="dev-tab-btn px-3 py-2 rounded-lg bg-white text-slate-700 hover:bg-emerald-50">5. Kas & Transaksi</button>
+        <button onclick="switchDevTab('umkm')" id="tab-btn-umkm" class="dev-tab-btn px-3 py-2 rounded-lg bg-white text-slate-700 hover:bg-emerald-50">6. UMKM</button>
+        <button onclick="switchDevTab('jadwal')" id="tab-btn-jadwal" class="dev-tab-btn px-3 py-2 rounded-lg bg-white text-slate-700 hover:bg-emerald-50">7. Jadwal</button>
+        <button onclick="switchDevTab('berita')" id="tab-btn-berita" class="dev-tab-btn px-3 py-2 rounded-lg bg-white text-slate-700 hover:bg-emerald-50">8. Berita</button>
+        <button onclick="switchDevTab('struktur')" id="tab-btn-struktur" class="dev-tab-btn px-3 py-2 rounded-lg bg-white text-slate-700 hover:bg-emerald-50">9. Struktur</button>
+        <button onclick="switchDevTab('settings')" id="tab-btn-settings" class="dev-tab-btn px-3 py-2 rounded-lg bg-white text-slate-700 hover:bg-emerald-50">10. Akun & Link Sheet</button>
+      </div>
+
+      <div id="dev-tab-content" class="p-6 overflow-y-auto flex-1 space-y-6 bg-slate-50"></div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT ENGINE -->
+  <script>
+    let state = {
+      config: {
+        nama_dusun: 'Dusun Ngrombeh',
+        wilayah: 'Desa Klopo, Kec. Tegalrejo, Kab. Magelang, Jawa Tengah',
+        tagline: 'Guyub Rukun, Maju Bersama, Sejahtera Warganya',
+        deskripsi_profil: 'Dusun Ngrombeh merupakan salah satu dusun yang asri dan dinamis di wilayah Desa Klopo, Kecamatan Tegalrejo, Kabupaten Magelang.',
+        luas_wilayah: '42,5 Ha',
+        kode_pos: '56192',
+        instagram: 'https://instagram.com/dusunngrombeh',
+        facebook: 'https://facebook.com/dusunngrombeh',
+        youtube: 'https://youtube.com/@dusunngrombeh',
+        tiktok: 'https://tiktok.com/@dusunngrombeh',
+        whatsapp_dusun: '6281234567890'
+      },
+      layout: [
+        { id: 'profil', nama_section: 'Profil & Demografi Dusun', aktif: true, urutan: 1, kolom: 2 },
+        { id: 'rt', nama_section: 'Persebaran Warga & KK per RT', aktif: true, urutan: 2, kolom: 2 },
+        { id: 'keuangan', nama_section: 'Transparansi Keuangan & Kas Dusun', aktif: true, urutan: 3, kolom: 3 },
+        { id: 'umkm', nama_section: 'UMKM Unggulan Warga', aktif: true, urutan: 4, kolom: 3 },
+        { id: 'jadwal', nama_section: 'Jadwal Kegiatan Dusun', aktif: true, urutan: 5, kolom: 2 },
+        { id: 'berita', nama_section: 'Arsip Berita & Dokumentasi', aktif: true, urutan: 6, kolom: 3 },
+        { id: 'struktur', nama_section: 'Struktur Organisasi Dusun', aktif: true, urutan: 7, kolom: 3 },
+        { id: 'sosmed', nama_section: 'Kanal & Sosial Media Dusun', aktif: true, urutan: 8, kolom: 4 }
+      ],
+      demografi: [
+        { id: 'd1', kategori: 'Balita', rentang_usia: '0 - 5 Tahun', laki_laki: 18, perempuan: 16 },
+        { id: 'd2', kategori: 'Anak-anak', rentang_usia: '6 - 12 Tahun', laki_laki: 27, perempuan: 25 },
+        { id: 'd3', kategori: 'Remaja', rentang_usia: '13 - 21 Tahun', laki_laki: 34, perempuan: 31 },
+        { id: 'd4', kategori: 'Dewasa', rentang_usia: '22 - 59 Tahun', laki_laki: 112, perempuan: 118 },
+        { id: 'd5', kategori: 'Lansia', rentang_usia: '60+ Tahun', laki_laki: 29, perempuan: 34 }
+      ],
+      rt: [
+        { id: 'rt1', nama_rt: 'RT 01 / RW 01', ketua_rt: 'Bpk. Slamet Riyadi', jumlah_kk: 68, laki_laki: 114, perempuan: 116 },
+        { id: 'rt2', nama_rt: 'RT 02 / RW 01', ketua_rt: 'Bpk. Ahmad Fauzi', jumlah_kk: 64, laki_laki: 106, perempuan: 108 }
+      ],
+      kas_kantong: [
+        { id: 'k1', nama_kantong: 'Kas RT 01', saldo_awal: 4500000, keterangan: 'Iuran rutin warga RT 01' },
+        { id: 'k2', nama_kantong: 'Kas RT 02', saldo_awal: 4250000, keterangan: 'Iuran rutin warga RT 02' },
+        { id: 'k3', nama_kantong: 'Kas Masjid', saldo_awal: 12800000, keterangan: 'Infaq Jumat & operasional masjid' },
+        { id: 'k4', nama_kantong: 'Kas Pembangunan', saldo_awal: 18500000, keterangan: 'Dana infrastruktur & jalan dusun' },
+        { id: 'k5', nama_kantong: 'Kas Jimpitan', saldo_awal: 3650000, keterangan: 'Hasil ronda malam warga' },
+        { id: 'k6', nama_kantong: 'Kas Pemuda', saldo_awal: 2900000, keterangan: 'Karang Taruna Ngrombeh Jaya' },
+        { id: 'k7', nama_kantong: 'Kas Sampah', saldo_awal: 1850000, keterangan: 'Pengelolaan bank sampah & kebersihan' }
+      ],
+      kas_transaksi: [
+        { id: 't1', tanggal: '2026-11-05', kantong_id: 'k5', jenis: 'masuk', nominal: 450000, keterangan: 'Setoran jimpitan minggu pertama' },
+        { id: 't2', tanggal: '2026-11-08', kantong_id: 'k4', jenis: 'keluar', nominal: 1200000, keterangan: 'Pembelian lampu penerangan jalan gang' },
+        { id: 't3', tanggal: '2026-11-12', kantong_id: 'k3', jenis: 'masuk', nominal: 850000, keterangan: 'Infaq kotak amal Jumat' },
+        { id: 't4', tanggal: '2026-11-15', kantong_id: 'k7', jenis: 'keluar', nominal: 300000, keterangan: 'Biaya angkut residu sampah dusun' }
+      ],
+      umkm: [
+        { id: 'u1', nama_usaha: 'Keripik Slondok & Potel Ngrombeh', pemilik: 'Ibu Siti Aminah', kategori: 'Kuliner Khas Magelang', deskripsi: 'Olahan singkong pilihan renyah gurih khas Tegalrejo.', whatsapp: '6281234567891', gambar: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=800&q=80' },
+        { id: 'u2', nama_usaha: 'Bibit Tanaman Buah & Hias Klopo', pemilik: 'Bpk. Hendra Kusuma', kategori: 'Pertanian & Bibit', deskripsi: 'Bibit durian montong, alpukat, dan tanaman hias pekarangan.', whatsapp: '6281234567892', gambar: 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=800&q=80' },
+        { id: 'u3', nama_usaha: 'Mebel Kayu Jati & Mahoni Jaya', pemilik: 'Bpk. Wahyu Hidayat', kategori: 'Kerajinan & Furnitur', deskripsi: 'Pintu, kusen, dan meja kursi custom bahan kayu pilihan.', whatsapp: '6281234567893', gambar: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=800&q=80' }
+      ],
+      jadwal: [
+        { id: 'j1', tanggal: '2026-11-22', waktu: '07:00 WIB', kegiatan: 'Kerja Bakti Bersih Saluran Irigasi & Jalan Dusun', lokasi: 'Seluruh Wilayah RT 01 & RT 02', penanggung_jawab: 'Kadus & Ketua RT' },
+        { id: 'j2', tanggal: '2026-11-25', waktu: '19:30 WIB', kegiatan: 'Rapat Koordinasi Rutin & Laporan Kas Bulanan', lokasi: 'Balai Pertemuan Dusun', penanggung_jawab: 'Pengurus Dusun' },
+        { id: 'j3', tanggal: '2026-12-02', waktu: '08:30 WIB', kegiatan: 'Posyandu Balita & Pemeriksaan Kesehatan Lansia', lokasi: 'Poskesdes', penanggung_jawab: 'Kader PKK & Bidan Desa' }
+      ],
+      berita: [
+        { id: 'b1', tanggal: '2026-11-10', judul: 'Gotong Royong Pengecoran Jalan Lingkungan RT 02', ringkasan: 'Warga Dusun Ngrombeh bahu-membahu menyelesaikan pengecoran jalan sepanjang 120 meter.', isi: 'Semangat gotong royong warga Dusun Ngrombeh kembali terlihat dalam pengecoran jalan swadaya.', gambar: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=800&q=80' },
+        { id: 'b2', tanggal: '2026-11-03', judul: 'Pelatihan Digital Marketing untuk Pelaku UMKM', ringkasan: 'Karang Taruna mengadakan pendampingan foto produk dan pemasaran online.', isi: 'Pelatihan praktis untuk mendorong produk lokal Dusun Ngrombeh.', gambar: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80' }
+      ],
+      struktur: [
+        { id: 's1', jabatan: 'Kepala Dusun (Kadus)', nama: 'Bpk. H. Muhamad Ridwan', kontak: '0812-3456-7890', urutan: 1 },
+        { id: 's2', jabatan: 'Ketua RW 01', nama: 'Bpk. Drs. Supriyanto', kontak: '0813-2233-4455', urutan: 2 },
+        { id: 's3', jabatan: 'Ketua RT 01', nama: 'Bpk. Slamet Riyadi', kontak: '0857-1122-3344', urutan: 3 },
+        { id: 's4', jabatan: 'Ketua RT 02', nama: 'Bpk. Ahmad Fauzi', kontak: '0858-5566-7788', urutan: 4 }
+      ]
+    };
+
+    // State untuk Pagination masing-masing kanal (Maksimal 4 item per halaman)
+    let currentKeuanganPage = 1;
+    let currentUmkmPage = 1;
+    let currentJadwalPage = 1;
+    let currentBeritaPage = 1;
+    const itemsPerPage = 4;
+
+    let chartDemografiInstance = null;
+    let chartRTInstance = null;
+    let devAuth = JSON.parse(sessionStorage.getItem('ngrombeh_dev_auth') || 'null');
+
+    function getGasUrl() {
+      return localStorage.getItem('ngrombeh_gas_url') || DEFAULT_GAS_URL;
+    }
+
+    function formatRupiah(angka) {
+      return 'Rp ' + Number(angka || 0).toLocaleString('id-ID');
+    }
+
+    function showSync(msg, autoHide = false) {
+      const banner = document.getElementById('sync-banner');
+      document.getElementById('sync-text').textContent = msg;
+      banner.classList.remove('hidden');
+      if (autoHide) setTimeout(() => banner.classList.add('hidden'), 3000);
+    }
+
+    async function refreshFromSheet() {
+      const url = getGasUrl();
+      if (!url) {
+        renderAll();
+        return;
+      }
+      showSync('Mengambil data terbaru dari Google Spreadsheets...');
+      try {
+        const res = await fetch(url + '?action=getAll');
+        const json = await res.json();
+        if (json.status === 'success') {
+          if (json.config && Object.keys(json.config).length) state.config = { ...state.config, ...json.config };
+          if (json.layout && json.layout.length) state.layout = json.layout.map(x => ({ ...x, aktif: x.aktif === true || x.aktif === 'true' || x.aktif === 'TRUE', urutan: Number(x.urutan), kolom: Number(x.kolom || 3) }));
+          if (json.demografi && json.demografi.length) state.demografi = json.demografi.map(x => ({ ...x, laki_laki: Number(x.laki_laki), perempuan: Number(x.perempuan) }));
+          if (json.rt && json.rt.length) state.rt = json.rt.map(x => ({ ...x, jumlah_kk: Number(x.jumlah_kk), laki_laki: Number(x.laki_laki), perempuan: Number(x.perempuan) }));
+          if (json.kas_kantong && json.kas_kantong.length) state.kas_kantong = json.kas_kantong.map(x => ({ ...x, saldo_awal: Number(x.saldo_awal) }));
+          if (json.kas_transaksi) state.kas_transaksi = json.kas_transaksi.map(x => ({ ...x, nominal: Number(x.nominal) }));
+          if (json.umkm) state.umkm = json.umkm;
+          if (json.jadwal) state.jadwal = json.jadwal;
+          if (json.berita) state.berita = json.berita;
+          if (json.struktur) state.struktur = json.struktur.map(x => ({ ...x, urutan: Number(x.urutan || 99) }));
+          showSync('Data tersinkronisasi dengan Google Spreadsheets!', true);
+        }
+      } catch (e) {
+        console.warn('Mode Offline / Preview:', e);
+        showSync('Mode Offline (Menggunakan data lokal)', true);
+      }
+      renderAll();
+    }
+
+    function renderAll() {
+      applyLayoutSettings();
+      renderHeaderHero();
+      renderDemografi();
+      renderRT();
+      renderKeuangan();
+      renderUMKM();
+      renderJadwal();
+      renderBerita();
+      renderStruktur();
+      renderSosmed();
+    }
+
+    function applyLayoutSettings() {
+      const container = document.getElementById('dynamic-sections-container');
+      const sorted = [...state.layout].sort((a, b) => a.urutan - b.urutan);
+      sorted.forEach(item => {
+        const sec = document.getElementById('sec-' + item.id);
+        if (!sec) return;
+        if (item.aktif) {
+          sec.classList.remove('hidden');
+          container.appendChild(sec);
+        } else {
+          sec.classList.add('hidden');
+        }
+        const gridEl = document.getElementById('grid-' + item.id);
+        if (gridEl && item.kolom) {
+          gridEl.classList.remove('lg:grid-cols-1', 'lg:grid-cols-2', 'lg:grid-cols-3', 'lg:grid-cols-4');
+          gridEl.classList.add('lg:grid-cols-' + item.kolom);
+        }
+      });
+    }
+
+    function renderHeaderHero() {
+      const c = state.config;
+      document.getElementById('nav-nama-dusun').textContent = c.nama_dusun;
+      document.getElementById('hero-nama-dusun').textContent = c.nama_dusun;
+      document.getElementById('hero-wilayah').textContent = c.wilayah;
+      document.getElementById('hero-tagline').textContent = c.tagline;
+      document.getElementById('hero-deskripsi').textContent = c.deskripsi_profil;
+      document.getElementById('info-luas').textContent = c.luas_wilayah;
+      document.getElementById('info-kodepos').textContent = c.kode_pos;
+      document.getElementById('footer-nama-dusun').textContent = c.nama_dusun;
+      document.getElementById('footer-wilayah').textContent = c.wilayah;
+    }
+
+    function renderDemografi() {
+      const tbody = document.getElementById('tbody-demografi');
+      const tfoot = document.getElementById('tfoot-demografi');
+      let sumL = 0, sumP = 0;
+
+      tbody.innerHTML = state.demografi.map(row => {
+        const l = Number(row.laki_laki || 0);
+        const p = Number(row.perempuan || 0);
+        sumL += l;
+        sumP += p;
+        return `
+          <tr class="hover:bg-emerald-50/60 transition">
+            <td class="py-3 px-4 font-bold text-slate-800">${row.kategori}</td>
+            <td class="py-3 px-3 text-xs text-slate-500">${row.rentang_usia}</td>
+            <td class="py-3 px-3 text-center font-semibold text-sky-700">${l}</td>
+            <td class="py-3 px-3 text-center font-semibold text-rose-700">${p}</td>
+            <td class="py-3 px-4 text-right font-bold text-emerald-900">${l + p}</td>
+          </tr>
+        `;
+      }).join('');
+
+      const total = sumL + sumP;
+      tfoot.innerHTML = `
+        <tr>
+          <td colspan="2" class="py-3 px-4 rounded-bl-xl">TOTAL PENDUDUK</td>
+          <td class="py-3 px-3 text-center text-sky-800">${sumL}</td>
+          <td class="py-3 px-3 text-center text-rose-800">${sumP}</td>
+          <td class="py-3 px-4 text-right rounded-br-xl text-emerald-900">${total} Jiwa</td>
+        </tr>
+      `;
+
+      // Hapus kelas skeleton saat data siap
+      ['stat-total-warga', 'stat-total-laki', 'stat-total-perempuan', 'stat-total-kas'].forEach(id => {
+        document.getElementById(id).classList.remove('skeleton');
+      });
+
+      document.getElementById('stat-total-warga').textContent = total;
+      document.getElementById('stat-total-laki').textContent = sumL;
+      document.getElementById('stat-total-perempuan').textContent = sumP;
+      document.getElementById('persen-laki').textContent = total ? ((sumL / total) * 100).toFixed(1) + '%' : '0%';
+      document.getElementById('persen-perempuan').textContent = total ? ((sumP / total) * 100).toFixed(1) + '%' : '0%';
+
+      const ctx = document.getElementById('chartDemografi').getContext('2d');
+      if (chartDemografiInstance) chartDemografiInstance.destroy();
+      chartDemografiInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: state.demografi.map(d => d.kategori),
+          datasets: [
+            { label: 'Laki-laki', data: state.demografi.map(d => d.laki_laki), backgroundColor: '#0284c7', borderRadius: 6 },
+            { label: 'Perempuan', data: state.demografi.map(d => d.perempuan), backgroundColor: '#e11d48', borderRadius: 6 }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true } } }
+      });
+    }
+
+    function renderRT() {
+      const container = document.getElementById('rt-cards-container');
+      let totalKK = 0;
+
+      container.innerHTML = state.rt.map(rt => {
+        const kk = Number(rt.jumlah_kk || 0);
+        const l = Number(rt.laki_laki || 0);
+        const p = Number(rt.perempuan || 0);
+        totalKK += kk;
+        return `
+          <div class="glass-card rounded-2xl p-5 shadow-sm border-l-4 border-emerald-700 hover:shadow-md transition">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <div>
+                <h3 class="font-extrabold text-emerald-950 text-lg">${rt.nama_rt}</h3>
+                <p class="text-xs text-slate-500"><i class="fa-solid fa-user-tie text-gold-600 mr-1"></i>Ketua: <strong class="text-slate-700">${rt.ketua_rt}</strong></p>
+              </div>
+              <div class="bg-gold-400/20 border border-gold-400/50 px-3.5 py-1.5 rounded-xl text-center">
+                <span class="block text-lg font-extrabold text-emerald-950 leading-none">${kk}</span>
+                <span class="text-[10px] font-bold uppercase text-emerald-800">KK</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-3 gap-2 pt-3 border-t border-slate-100 text-center text-xs">
+              <div class="bg-sky-50 py-2 rounded-lg"><span class="text-slate-500 block">Laki-laki</span><strong class="text-sky-800 text-sm">${l}</strong></div>
+              <div class="bg-rose-50 py-2 rounded-lg"><span class="text-slate-500 block">Perempuan</span><strong class="text-rose-800 text-sm">${p}</strong></div>
+              <div class="bg-emerald-50 py-2 rounded-lg"><span class="text-slate-500 block">Total</span><strong class="text-emerald-900 text-sm">${l + p}</strong></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('stat-total-kk').classList.remove('skeleton');
+      document.getElementById('stat-total-kk').textContent = totalKK;
+      document.getElementById('stat-total-rt').textContent = state.rt.length + ' RT';
+      document.getElementById('badge-jumlah-rt').textContent = state.rt.length + ' Wilayah RT';
+
+      const ctx = document.getElementById('chartRT').getContext('2d');
+      if (chartRTInstance) chartRTInstance.destroy();
+      chartRTInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: state.rt.map(r => r.nama_rt),
+          datasets: [
+            { label: 'Jumlah KK', data: state.rt.map(r => r.jumlah_kk), backgroundColor: '#eab308', borderRadius: 6 },
+            { label: 'Laki-laki', data: state.rt.map(r => r.laki_laki), backgroundColor: '#059669', borderRadius: 6 },
+            { label: 'Perempuan', data: state.rt.map(r => r.perempuan), backgroundColor: '#064e3b', borderRadius: 6 }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true } } }
+      });
+    }
+
+    // RENDER KEUANGAN DENGAN PAGINATION
+    function renderKeuangan() {
+      const grid = document.getElementById('grid-keuangan');
+      const filterSelect = document.getElementById('filter-kantong');
+      const currentFilter = filterSelect.value || 'ALL';
+
+      filterSelect.innerHTML = `<option value="ALL">Semua Kantong Kas</option>` +
+        state.kas_kantong.map(k => `<option value="${k.id}" ${currentFilter === k.id ? 'selected' : ''}>${k.nama_kantong}</option>`).join('');
+
+      let grandTotal = 0;
+      const kantongMap = {};
+
+      grid.innerHTML = state.kas_kantong.map(k => {
+        kantongMap[k.id] = k.nama_kantong;
+        let masuk = 0, keluar = 0;
+        state.kas_transaksi.filter(t => t.kantong_id === k.id).forEach(t => {
+          if (t.jenis === 'masuk') masuk += Number(t.nominal || 0);
+          else keluar += Number(t.nominal || 0);
+        });
+        const saldoAkhir = Number(k.saldo_awal || 0) + masuk - keluar;
+        grandTotal += saldoAkhir;
+
+        return `
+          <div class="glass-card rounded-2xl p-5 shadow-sm border-t-4 border-emerald-700">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <h4 class="font-bold text-emerald-950 text-base">${k.nama_kantong}</h4>
+                <p class="text-xs text-slate-500 mt-0.5">${k.keterangan || ''}</p>
+              </div>
+              <span class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center"><i class="fa-solid fa-wallet"></i></span>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100">
+              <span class="text-[11px] text-slate-400 block">Saldo Saat Ini</span>
+              <span class="text-xl font-extrabold text-emerald-800">${formatRupiah(saldoAkhir)}</span>
+              <div class="flex justify-between text-[11px] mt-2 text-slate-500">
+                <span class="text-emerald-600"><i class="fa-solid fa-arrow-down mr-1"></i>+${formatRupiah(masuk)}</span>
+                <span class="text-rose-600"><i class="fa-solid fa-arrow-up mr-1"></i>-${formatRupiah(keluar)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('keuangan-grand-total').textContent = formatRupiah(grandTotal);
+      document.getElementById('stat-total-kas').textContent = formatRupiah(grandTotal);
+
+      // Filter & Paginasi Arus Kas
+      const filteredTx = currentFilter === 'ALL'
+        ? state.kas_transaksi
+        : state.kas_transaksi.filter(t => t.kantong_id === currentFilter);
+      const sortedTx = [...filteredTx].sort((a, b) => String(b.tanggal).localeCompare(String(a.tanggal)));
+
+      const totalPages = Math.ceil(sortedTx.length / itemsPerPage) || 1;
+      if (currentKeuanganPage > totalPages) currentKeuanganPage = totalPages;
+      const startIdx = (currentKeuanganPage - 1) * itemsPerPage;
+      const paginatedTx = sortedTx.slice(startIdx, startIdx + itemsPerPage);
+
+      const tbody = document.getElementById('tbody-transaksi');
+      tbody.innerHTML = paginatedTx.length ? paginatedTx.map(t => `
+        <tr class="hover:bg-slate-50">
+          <td class="py-3 px-4 text-xs font-medium text-slate-600 whitespace-nowrap">${t.tanggal}</td>
+          <td class="py-3 px-4 font-semibold text-emerald-900">${kantongMap[t.kantong_id] || 'Kas Dusun'}</td>
+          <td class="py-3 px-4 text-slate-700">${t.keterangan}</td>
+          <td class="py-3 px-4 text-center">
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${t.jenis === 'masuk' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
+              ${t.jenis === 'masuk' ? 'Masuk' : 'Keluar'}
+            </span>
+          </td>
+          <td class="py-3 px-4 text-right font-bold ${t.jenis === 'masuk' ? 'text-emerald-700' : 'text-rose-600'}">
+            ${t.jenis === 'masuk' ? '+' : '-'} ${formatRupiah(t.nominal)}
+          </td>
+        </tr>
+      `).join('') : `<tr><td colspan="5" class="py-6 text-center text-slate-400 text-xs">Belum ada catatan transaksi.</td></tr>`;
+
+      // Render Kontrol Paginasi Arus Kas
+      document.getElementById('pagination-keuangan').innerHTML = `
+        <span class="text-slate-500">Menampilkan halaman <strong>${currentKeuanganPage}</strong> dari <strong>${totalPages}</strong> (${sortedTx.length} total transaksi)</span>
+        <div class="flex gap-1">
+          <button onclick="if(currentKeuanganPage > 1){ currentKeuanganPage--; renderKeuangan(); }" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 rounded font-bold ${currentKeuanganPage === 1 ? 'opacity-40 cursor-not-allowed' : ''}">Sebelumnya</button>
+          <button onclick="if(currentKeuanganPage < ${totalPages}){ currentKeuanganPage++; renderKeuangan(); }" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 rounded font-bold ${currentKeuanganPage === totalPages ? 'opacity-40 cursor-not-allowed' : ''}">Selanjutnya</button>
+        </div>
+      `;
+    }
+
+    // RENDER UMKM DENGAN PAGINATION
+    function renderUMKM() {
+      const grid = document.getElementById('grid-umkm');
+      const totalPages = Math.ceil(state.umkm.length / itemsPerPage) || 1;
+      if (currentUmkmPage > totalPages) currentUmkmPage = totalPages;
+      const startIdx = (currentUmkmPage - 1) * itemsPerPage;
+      const paginated = state.umkm.slice(startIdx, startIdx + itemsPerPage);
+
+      grid.innerHTML = paginated.map(u => `
+        <div class="glass-card rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition flex flex-col">
+          <div class="h-48 bg-emerald-100 relative overflow-hidden">
+            <img src="${u.gambar || 'https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=800&q=80'}" alt="${u.nama_usaha}" class="w-full h-full object-cover hover:scale-105 transition duration-500" />
+            <span class="absolute top-3 left-3 bg-emerald-900/90 text-gold-300 text-[11px] font-bold px-3 py-1 rounded-full">${u.kategori}</span>
+          </div>
+          <div class="p-5 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="font-extrabold text-emerald-950 text-lg">${u.nama_usaha}</h3>
+              <p class="text-xs font-semibold text-emerald-700 mt-0.5"><i class="fa-solid fa-store mr-1"></i>${u.pemilik}</p>
+              <p class="text-xs text-slate-600 mt-3 leading-relaxed">${u.deskripsi}</p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-slate-100">
+              <a href="https://wa.me/${String(u.whatsapp || '').replace(/[^0-9]/g, '')}" target="_blank" class="w-full py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold flex items-center justify-center gap-2 transition">
+                <i class="fa-brands fa-whatsapp text-base"></i> WhatsApp Penjual
+              </a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('pagination-umkm').innerHTML = `
+        <span class="text-slate-500">Halaman <strong>${currentUmkmPage}</strong> dari <strong>${totalPages}</strong> (${state.umkm.length} UMKM)</span>
+        <div class="flex gap-1">
+          <button onclick="if(currentUmkmPage > 1){ currentUmkmPage--; renderUMKM(); }" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 rounded font-bold ${currentUmkmPage === 1 ? 'opacity-40 cursor-not-allowed' : ''}">Sebelumnya</button>
+          <button onclick="if(currentUmkmPage < ${totalPages}){ currentUmkmPage++; renderUMKM(); }" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 rounded font-bold ${currentUmkmPage === totalPages ? 'opacity-40 cursor-not-allowed' : ''}">Selanjutnya</button>
+        </div>
+      `;
+    }
+
+    // RENDER JADWAL DENGAN PAGINATION
+    function renderJadwal() {
+      const grid = document.getElementById('grid-jadwal');
+      const sorted = [...state.jadwal].sort((a, b) => String(a.tanggal).localeCompare(String(b.tanggal)));
+      const totalPages = Math.ceil(sorted.length / itemsPerPage) || 1;
+      if (currentJadwalPage > totalPages) currentJadwalPage = totalPages;
+      const startIdx = (currentJadwalPage - 1) * itemsPerPage;
+      const paginated = sorted.slice(startIdx, startIdx + itemsPerPage);
+
+      grid.innerHTML = paginated.map(j => `
+        <div class="glass-card rounded-2xl p-5 shadow-sm flex items-start gap-4 border-l-4 border-gold-400">
+          <div class="bg-emerald-800 text-white rounded-xl p-3 text-center min-w-[76px]">
+            <span class="text-[10px] uppercase tracking-wider text-gold-300 block">Agenda</span>
+            <span class="text-xs font-extrabold block mt-0.5">${j.tanggal}</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-bold text-emerald-950 text-base">${j.kegiatan}</h3>
+            <div class="mt-2 space-y-1 text-xs text-slate-600">
+              <div><i class="fa-regular fa-clock text-emerald-600 w-4"></i> ${j.waktu}</div>
+              <div><i class="fa-solid fa-location-dot text-emerald-600 w-4"></i> ${j.lokasi}</div>
+              <div><i class="fa-solid fa-user-check text-emerald-600 w-4"></i> PJ: ${j.penanggung_jawab}</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('pagination-jadwal').innerHTML = `
+        <span class="text-slate-500">Halaman <strong>${currentJadwalPage}</strong> dari <strong>${totalPages}</strong> (${sorted.length} agenda)</span>
+        <div class="flex gap-1">
+          <button onclick="if(currentJadwalPage > 1){ currentJadwalPage--; renderJadwal(); }" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 rounded font-bold ${currentJadwalPage === 1 ? 'opacity-40 cursor-not-allowed' : ''}">Sebelumnya</button>
+          <button onclick="if(currentJadwalPage < ${totalPages}){ currentJadwalPage++; renderJadwal(); }" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 rounded font-bold ${currentJadwalPage === totalPages ? 'opacity-40 cursor-not-allowed' : ''}">Selanjutnya</button>
+        </div>
+      `;
+    }
+
+    // RENDER BERITA DENGAN PAGINATION
+    function renderBerita() {
+      const grid = document.getElementById('grid-berita');
+      const sorted = [...state.berita].sort((a, b) => String(b.tanggal).localeCompare(String(a.tanggal)));
+      const totalPages = Math.ceil(sorted.length / itemsPerPage) || 1;
+      if (currentBeritaPage > totalPages) currentBeritaPage = totalPages;
+      const startIdx = (currentBeritaPage - 1) * itemsPerPage;
+      const paginated = sorted.slice(startIdx, startIdx + itemsPerPage);
+
+      grid.innerHTML = paginated.map((b, idx) => {
+        const realIdx = startIdx + idx;
+        return `
+          <article class="glass-card rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition flex flex-col">
+            <img src="${b.gambar || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80'}" alt="${b.judul}" class="w-full h-48 object-cover" />
+            <div class="p-5 flex-1 flex flex-col justify-between">
+              <div>
+                <span class="text-[11px] font-bold text-emerald-700"><i class="fa-regular fa-calendar mr-1"></i>${b.tanggal}</span>
+                <h3 class="font-extrabold text-slate-900 text-base mt-1.5 line-clamp-2">${b.judul}</h3>
+                <p class="text-xs text-slate-600 mt-2 line-clamp-3 leading-relaxed">${b.ringkasan}</p>
+              </div>
+              <button onclick="openBeritaDetail(${realIdx})" class="mt-4 text-left text-xs font-bold text-emerald-700 hover:text-emerald-900 flex items-center gap-1">
+                Baca Selengkapnya <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      document.getElementById('pagination-berita').innerHTML = `
+        <span class="text-slate-500">Halaman <strong>${currentBeritaPage}</strong> dari <strong>${totalPages}</strong> (${sorted.length} berita)</span>
+        <div class="flex gap-1">
+          <button onclick="if(currentBeritaPage > 1){ currentBeritaPage--; renderBerita(); }" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 rounded font-bold ${currentBeritaPage === 1 ? 'opacity-40 cursor-not-allowed' : ''}">Sebelumnya</button>
+          <button onclick="if(currentBeritaPage < ${totalPages}){ currentBeritaPage++; renderBerita(); }" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 rounded font-bold ${currentBeritaPage === totalPages ? 'opacity-40 cursor-not-allowed' : ''}">Selanjutnya</button>
+        </div>
+      `;
+    }
+
+    function openBeritaDetail(realIdx) {
+      const sorted = [...state.berita].sort((a, b) => String(b.tanggal).localeCompare(String(a.tanggal)));
+      const b = sorted[realIdx];
+      if (!b) return;
+      document.getElementById('detail-berita-img').src = b.gambar || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80';
+      document.getElementById('detail-berita-tgl').textContent = b.tanggal;
+      document.getElementById('detail-berita-judul').textContent = b.judul;
+      document.getElementById('detail-berita-isi').textContent = b.isi || b.ringkasan;
+      document.getElementById('modal-berita-detail').classList.remove('hidden');
+    }
+
+    function renderStruktur() {
+      const grid = document.getElementById('grid-struktur');
+      const sorted = [...state.struktur].sort((a, b) => Number(a.urutan || 99) - Number(b.urutan || 99));
+      grid.innerHTML = sorted.map(s => `
+        <div class="glass-card rounded-2xl p-5 shadow-sm flex items-center gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-800 to-emerald-600 text-gold-300 flex items-center justify-center font-extrabold text-lg shrink-0">
+            <i class="fa-solid fa-user-shield"></i>
+          </div>
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-700 block">${s.jabatan}</span>
+            <h3 class="font-extrabold text-slate-900 text-base">${s.nama}</h3>
+            <span class="text-xs text-slate-500"><i class="fa-solid fa-phone text-gold-600 mr-1"></i>${s.kontak || '-'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderSosmed() {
+      const c = state.config;
+      const items = [
+        { name: 'Instagram', icon: 'fa-instagram', url: c.instagram, color: 'hover:bg-pink-600' },
+        { name: 'Facebook', icon: 'fa-facebook', url: c.facebook, color: 'hover:bg-blue-600' },
+        { name: 'YouTube', icon: 'fa-youtube', url: c.youtube, color: 'hover:bg-red-600' },
+        { name: 'TikTok', icon: 'fa-tiktok', url: c.tiktok, color: 'hover:bg-slate-800' }
+      ];
+      document.getElementById('grid-sosmed').innerHTML = items.map(i => `
+        <a href="${i.url || '#'}" target="_blank" class="bg-white/10 ${i.color} border border-white/15 rounded-2xl p-4 flex items-center gap-3 transition group">
+          <i class="fa-brands ${i.icon} text-2xl text-gold-400 group-hover:text-white"></i>
+          <div>
+            <span class="font-bold text-sm block">${i.name}</span>
+            <span class="text-[11px] text-emerald-200 group-hover:text-white/90">Kunjungi Kanal</span>
+          </div>
+        </a>
+      `).join('');
+    }
+
+    // LOGIN & DEVELOPER MODAL
+    function openLoginModal() {
+      if (devAuth) { openDevModal('layout'); return; }
+      document.getElementById('modal-login').classList.remove('hidden');
+    }
+    function closeLoginModal() { document.getElementById('modal-login').classList.add('hidden'); }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById('login-user').value.trim();
+      const password = document.getElementById('login-pass').value.trim();
+      const errBox = document.getElementById('login-error');
+      const btn = document.getElementById('btn-login-submit');
+      errBox.classList.add('hidden');
+
+      const url = getGasUrl();
+      if (!url) {
+        if (username === 'admin' && password === 'ngrombeh2026') {
+          activateDeveloperSession(username, password);
+          closeLoginModal();
+        } else {
+          errBox.textContent = 'Offline login default: admin / ngrombeh2026';
+          errBox.classList.remove('hidden');
+        }
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Memverifikasi...';
+      try {
+        const res = await fetch(url, { method: 'POST', body: JSON.stringify({ action: 'login', username, password }) });
+        const json = await res.json();
+        if (json.status === 'success') {
+          activateDeveloperSession(username, password);
+          closeLoginModal();
+        } else {
+          errBox.textContent = json.message || 'Login gagal.';
+          errBox.classList.remove('hidden');
+        }
+      } catch (err) {
+        errBox.textContent = 'Gagal terhubung ke Google Apps Script.';
+        errBox.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Masuk Mode Developer';
+      }
+    }
+
+    function activateDeveloperSession(username, password) {
+      devAuth = { username, password };
+      sessionStorage.setItem('ngrombeh_dev_auth', JSON.stringify(devAuth));
+      document.getElementById('dev-toolbar').classList.remove('hidden');
+    }
+
+    function logoutDeveloper() {
+      devAuth = null;
+      sessionStorage.removeItem('ngrombeh_dev_auth');
+      document.getElementById('dev-toolbar').classList.add('hidden');
+      closeDevModal();
+    }
+
+    let activeDevTab = 'layout';
+    function openDevModal(tab = 'layout') {
+      document.getElementById('modal-dev').classList.remove('hidden');
+      switchDevTab(tab === 'data' ? 'profil' : tab);
+    }
+    function closeDevModal() { document.getElementById('modal-dev').classList.add('hidden'); }
+
+    function switchDevTab(tab) {
+      activeDevTab = tab;
+      document.querySelectorAll('.dev-tab-btn').forEach(b => {
+        b.classList.remove('bg-emerald-800', 'text-white');
+        b.classList.add('bg-white', 'text-slate-700');
+      });
+      const activeBtn = document.getElementById('tab-btn-' + tab);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-white', 'text-slate-700');
+        activeBtn.classList.add('bg-emerald-800', 'text-white');
+      }
+      renderDevTabContent();
+    }
+
+    function handleImageUpload(inputEl, targetInputId) {
+      const file = inputEl.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = new Image();
+        img.onload = function () {
+          const canvas = document.createElement('canvas');
+          const maxW = 500;
+          const scale = Math.min(1, maxW / img.width);
+          canvas.width = img.width * scale;
+          canvas.height = img.height * scale;
+          canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+          document.getElementById(targetInputId).value = canvas.toDataURL('image/jpeg', 0.6);
+          alert('Foto berhasil dioptimalkan!');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function saveToGoogleSheet(target, dataPayload) {
+      renderAll();
+      const url = getGasUrl();
+      if (!url) {
+        alert('Perubahan diterapkan di tampilan lokal! Masukkan URL Apps Script pada Tab 10 untuk menyimpan permanen.');
+        return;
+      }
+      showSync('Menyimpan ' + target + '...');
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'saveSection', username: devAuth.username, password: devAuth.password, target, data: dataPayload })
+        });
+        const json = await res.json();
+        alert(json.message || 'Berhasil disimpan!');
+      } catch (e) {
+        alert('Gagal menyimpan ke spreadsheet.');
+      }
+    }
+
+    function renderDevTabContent() {
+      const box = document.getElementById('dev-tab-content');
+      if (activeDevTab === 'layout') {
+        const sorted = [...state.layout].sort((a, b) => a.urutan - b.urutan);
+        box.innerHTML = `
+          <div class="bg-white p-5 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-emerald-950 text-base mb-1">Tata Letak Website (Layout Manager)</h4>
+            <div class="space-y-2.5 mt-4">
+              ${sorted.map((item, idx) => `
+                <div class="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-slate-50 border text-xs">
+                  <div class="flex items-center gap-3">
+                    <input type="checkbox" id="lay-act-${idx}" ${item.aktif ? 'checked' : ''} class="w-4 h-4 accent-emerald-700" />
+                    <span class="font-bold text-slate-800">${item.nama_section}</span>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <label>Urutan: <input type="number" id="lay-ord-${idx}" value="${item.urutan}" class="w-14 px-2 py-1 border rounded text-center font-bold" /></label>
+                    <label>Kolom: 
+                      <select id="lay-col-${idx}" class="px-2 py-1 border rounded font-semibold">
+                        <option value="2" ${item.kolom == 2 ? 'selected' : ''}>2 Kolom</option>
+                        <option value="3" ${item.kolom == 3 ? 'selected' : ''}>3 Kolom</option>
+                        <option value="4" ${item.kolom == 4 ? 'selected' : ''}>4 Kolom</option>
+                      </select>
+                    </label>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+            <button onclick="saveLayoutForm()" class="mt-4 px-5 py-2.5 rounded-xl bg-emerald-800 text-white text-xs font-bold">Simpan Tata Letak</button>
+          </div>
+        `;
+      } else if (activeDevTab === 'profil') {
+        const c = state.config;
+        box.innerHTML = `
+          <div class="bg-white p-5 rounded-xl border space-y-4 text-xs">
+            <h4 class="font-bold text-emerald-950 text-base">Profil & Sosmed</h4>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div><label class="font-bold block mb-1">Nama Dusun</label><input id="cfg-nama" value="${c.nama_dusun}" class="w-full p-2 border rounded" /></div>
+              <div><label class="font-bold block mb-1">Wilayah</label><input id="cfg-wilayah" value="${c.wilayah}" class="w-full p-2 border rounded" /></div>
+              <div><label class="font-bold block mb-1">Tagline</label><input id="cfg-tagline" value="${c.tagline}" class="w-full p-2 border rounded" /></div>
+              <div class="grid grid-cols-2 gap-2">
+                <div><label class="font-bold block mb-1">Luas</label><input id="cfg-luas" value="${c.luas_wilayah}" class="w-full p-2 border rounded" /></div>
+                <div><label class="font-bold block mb-1">Kode Pos</label><input id="cfg-kodepos" value="${c.kode_pos}" class="w-full p-2 border rounded" /></div>
+              </div>
+              <div class="sm:col-span-2"><label class="font-bold block mb-1">Deskripsi</label><textarea id="cfg-desk" rows="3" class="w-full p-2 border rounded">${c.deskripsi_profil}</textarea></div>
+              <div><label class="font-bold block mb-1">Instagram</label><input id="cfg-ig" value="${c.instagram}" class="w-full p-2 border rounded" /></div>
+              <div><label class="font-bold block mb-1">Facebook</label><input id="cfg-fb" value="${c.facebook}" class="w-full p-2 border rounded" /></div>
+              <div><label class="font-bold block mb-1">YouTube</label><input id="cfg-yt" value="${c.youtube}" class="w-full p-2 border rounded" /></div>
+              <div><label class="font-bold block mb-1">TikTok</label><input id="cfg-tt" value="${c.tiktok}" class="w-full p-2 border rounded" /></div>
+            </div>
+            <button onclick="saveConfigForm()" class="px-5 py-2.5 rounded-xl bg-emerald-800 text-white font-bold">Simpan Profil</button>
+          </div>
+        `;
+      } else if (activeDevTab === 'demografi') {
+        box.innerHTML = `
+          <div class="bg-white p-5 rounded-xl border">
+            <div class="flex justify-between items-center mb-4"><h4 class="font-bold text-base">Demografi Usia</h4>
+            <button onclick="state.demografi.push({id:'d'+Date.now(), kategori:'Baru', rentang_usia:'0', laki_laki:0, perempuan:0}); renderDevTabContent();" class="px-3 py-1 bg-gold-400 font-bold rounded text-xs">+ Tambah</button></div>
+            <div class="space-y-2 text-xs">
+              ${state.demografi.map((d, i) => `
+                <div class="grid grid-cols-12 gap-2 items-center bg-slate-50 p-2.5 rounded border">
+                  <input value="${d.kategori}" onchange="state.demografi[${i}].kategori=this.value" class="col-span-3 p-1 border rounded font-bold" />
+                  <input value="${d.rentang_usia}" onchange="state.demografi[${i}].rentang_usia=this.value" class="col-span-3 p-1 border rounded" />
+                  <input type="number" value="${d.laki_laki}" onchange="state.demografi[${i}].laki_laki=Number(this.value)" class="col-span-2 p-1 border rounded text-center" />
+                  <input type="number" value="${d.perempuan}" onchange="state.demografi[${i}].perempuan=Number(this.value)" class="col-span-2 p-1 border rounded text-center" />
+                  <button onclick="state.demografi.splice(${i},1); renderDevTabContent();" class="col-span-2 text-rose-600 font-bold">Hapus</button>
+                </div>
+              `).join('')}
+            </div>
+            <button onclick="saveToGoogleSheet('Demografi', state.demografi)" class="mt-4 px-5 py-2.5 rounded-xl bg-emerald-800 text-white text-xs font-bold">Simpan Demografi</button>
+          </div>
+        `;
+      } else if (activeDevTab === 'rt') {
+        box.innerHTML = `
+          <div class="bg-white p-5 rounded-xl border">
+            <div class="flex justify-between items-center mb-4"><h4 class="font-bold text-base">Data RT & KK</h4>
+            <button onclick="state.rt.push({id:'rt'+Date.now(), nama_rt:'RT 0'+(state.rt.length+1), ketua_rt:'Ketua RT', jumlah_kk:0, laki_laki:0, perempuan:0}); renderDevTabContent();" class="px-3 py-1 bg-gold-400 font-bold rounded text-xs">+ Tambah RT</button></div>
+            <div class="space-y-3 text-xs">
+              ${state.rt.map((r, i) => `
+                <div class="p-3 bg-slate-50 rounded-xl border grid sm:grid-cols-6 gap-2 items-center">
+                  <input value="${r.nama_rt}" onchange="state.rt[${i}].nama_rt=this.value" class="p-1 border rounded font-bold" />
+                  <input value="${r.ketua_rt}" onchange="state.rt[${i}].ketua_rt=this.value" class="p-1 border rounded" />
+                  <input type="number" value="${r.jumlah_kk}" onchange="state.rt[${i}].jumlah_kk=Number(this.value)" class="p-1 border rounded font-bold" />
+                  <input type="number" value="${r.laki_laki}" onchange="state.rt[${i}].laki_laki=Number(this.value)" class="p-1 border rounded" />
+                  <input type="number" value="${r.perempuan}" onchange="state.rt[${i}].perempuan=Number(this.value)" class="p-1 border rounded" />
+                  <button onclick="state.rt.splice(${i},1); renderDevTabContent();" class="py-1 bg-rose-100 text-rose-700 rounded font-bold">Hapus</button>
+                </div>
+              `).join('')}
+            </div>
+            <button onclick="saveToGoogleSheet('RT', state.rt)" class="mt-4 px-5 py-2.5 rounded-xl bg-emerald-800 text-white text-xs font-bold">Simpan RT</button>
+          </div>
+        `;
+      } else if (activeDevTab === 'keuangan') {
+        box.innerHTML = `
+          <div class="space-y-6 text-xs">
+            <div class="bg-white p-5 rounded-xl border">
+              <div class="flex justify-between items-center mb-3"><h4 class="font-bold text-base">Kantong Kas</h4>
+              <button onclick="state.kas_kantong.push({id:'k'+Date.now(), nama_kantong:'Kas Baru', saldo_awal:0, keterangan:'ket'}); renderDevTabContent();" class="px-3 py-1 bg-gold-400 font-bold rounded">+ Tambah</button></div>
+              <div class="space-y-2">
+                ${state.kas_kantong.map((k, i) => `
+                  <div class="grid sm:grid-cols-12 gap-2 items-center bg-slate-50 p-2.5 rounded border">
+                    <input value="${k.nama_kantong}" onchange="state.kas_kantong[${i}].nama_kantong=this.value" class="sm:col-span-3 p-1 border rounded font-bold" />
+                    <input type="number" value="${k.saldo_awal}" onchange="state.kas_kantong[${i}].saldo_awal=Number(this.value)" class="sm:col-span-3 p-1 border rounded" />
+                    <input value="${k.keterangan}" onchange="state.kas_kantong[${i}].keterangan=this.value" class="sm:col-span-5 p-1 border rounded" />
+                    <button onclick="state.kas_kantong.splice(${i},1); renderDevTabContent();" class="sm:col-span-1 text-rose-600 font-bold">Hapus</button>
+                  </div>
+                `).join('')}
+              </div>
+              <button onclick="saveToGoogleSheet('Kas_Kantong', state.kas_kantong)" class="mt-3 px-4 py-2 bg-emerald-800 text-white font-bold rounded">Simpan Kantong</button>
+            </div>
+            <div class="bg-white p-5 rounded-xl border">
+              <div class="flex justify-between items-center mb-3"><h4 class="font-bold text-base">Arus Transaksi</h4>
+              <button onclick="state.kas_transaksi.unshift({id:'t'+Date.now(), tanggal:new Date().toISOString().slice(0,10), kantong_id:state.kas_kantong[0]?.id||'k1', jenis:'masuk', nominal:0, keterangan:'Baru'}); renderDevTabContent();" class="px-3 py-1 bg-gold-400 font-bold rounded">+ Transaksi</button></div>
+              <div class="space-y-2 max-h-60 overflow-y-auto">
+                ${state.kas_transaksi.map((t, i) => `
+                  <div class="grid sm:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border">
+                    <input type="date" value="${t.tanggal}" onchange="state.kas_transaksi[${i}].tanggal=this.value" class="sm:col-span-2 p-1 border rounded" />
+                    <select onchange="state.kas_transaksi[${i}].kantong_id=this.value" class="sm:col-span-2 p-1 border rounded">
+                      ${state.kas_kantong.map(k => `<option value="${k.id}" ${t.kantong_id === k.id ? 'selected' : ''}>${k.nama_kantong}</option>`).join('')}
+                    </select>
+                    <select onchange="state.kas_transaksi[${i}].jenis=this.value" class="sm:col-span-2 p-1 border rounded">
+                      <option value="masuk" ${t.jenis === 'masuk' ? 'selected' : ''}>Masuk</option>
+                      <option value="keluar" ${t.jenis === 'keluar' ? 'selected' : ''}>Keluar</option>
+                    </select>
+                    <input type="number" value="${t.nominal}" onchange="state.kas_transaksi[${i}].nominal=Number(this.value)" class="sm:col-span-2 p-1 border rounded" />
+                    <input value="${t.keterangan}" onchange="state.kas_transaksi[${i}].keterangan=this.value" class="sm:col-span-3 p-1 border rounded" />
+                    <button onclick="state.kas_transaksi.splice(${i},1); renderDevTabContent();" class="sm:col-span-1 text-rose-600 font-bold">Hapus</button>
+                  </div>
+                `).join('')}
+              </div>
+              <button onclick="saveToGoogleSheet('Kas_Transaksi', state.kas_transaksi)" class="mt-3 px-4 py-2 bg-emerald-800 text-white font-bold rounded">Simpan Transaksi</button>
+            </div>
+          </div>
+        `;
+      } else if (activeDevTab === 'umkm') {
+        box.innerHTML = `
+          <div class="bg-white p-5 rounded-xl border text-xs">
+            <div class="flex justify-between items-center mb-4"><h4 class="font-bold text-base">UMKM Warga</h4>
+            <button onclick="state.umkm.unshift({id:'u'+Date.now(), nama_usaha:'Usaha Baru', pemilik:'Pemilik', kategori:'Kuliner', deskripsi:'Deskripsi', whatsapp:'628...', gambar:''}); renderDevTabContent();" class="px-3 py-1 bg-gold-400 font-bold rounded">+ Tambah</button></div>
+            <div class="space-y-4">
+              ${state.umkm.map((u, i) => `
+                <div class="p-3 bg-slate-50 rounded-xl border space-y-2">
+                  <div class="grid sm:grid-cols-4 gap-2">
+                    <input value="${u.nama_usaha}" onchange="state.umkm[${i}].nama_usaha=this.value" class="p-1 border rounded font-bold" />
+                    <input value="${u.pemilik}" onchange="state.umkm[${i}].pemilik=this.value" class="p-1 border rounded" />
+                    <input value="${u.kategori}" onchange="state.umkm[${i}].kategori=this.value" class="p-1 border rounded" />
+                    <input value="${u.whatsapp}" onchange="state.umkm[${i}].whatsapp=this.value" class="p-1 border rounded" />
+                  </div>
+                  <textarea onchange="state.umkm[${i}].deskripsi=this.value" rows="2" class="w-full p-1 border rounded">${u.deskripsi}</textarea>
+                  <div class="flex gap-2 items-center">
+                    <input id="umkm-img-${i}" value="${u.gambar}" onchange="state.umkm[${i}].gambar=this.value" class="flex-1 p-1 border rounded" placeholder="URL Foto" />
+                    <label class="px-3 py-1.5 bg-emerald-100 font-bold rounded cursor-pointer">Upload <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(this, 'umkm-img-${i}'); setTimeout(()=>state.umkm[${i}].gambar=document.getElementById('umkm-img-${i}').value, 500);" /></label>
+                    <button onclick="state.umkm.splice(${i},1); renderDevTabContent();" class="px-3 py-1.5 bg-rose-100 text-rose-700 font-bold rounded">Hapus</button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+            <button onclick="saveToGoogleSheet('UMKM', state.umkm)" class="mt-4 px-5 py-2.5 rounded-xl bg-emerald-800 text-white font-bold">Simpan UMKM</button>
+          </div>
+        `;
+      } else if (activeDevTab === 'jadwal') {
+        box.innerHTML = `
+          <div class="bg-white p-5 rounded-xl border text-xs">
+            <div class="flex justify-between items-center mb-4"><h4 class="font-bold text-base">Jadwal</h4>
+            <button onclick="state.jadwal.unshift({id:'j'+Date.now(), tanggal:new Date().toISOString().slice(0,10), waktu:'08:00', kegiatan:'Kegiatan', lokasi:'Lokasi', penanggung_jawab:'PJ'}); renderDevTabContent();" class="px-3 py-1 bg-gold-400 font-bold rounded">+ Tambah</button></div>
+            <div class="space-y-2">
+              ${state.jadwal.map((j, i) => `
+                <div class="grid sm:grid-cols-12 gap-2 items-center bg-slate-50 p-2.5 rounded border">
+                  <input type="date" value="${j.tanggal}" onchange="state.jadwal[${i}].tanggal=this.value" class="sm:col-span-2 p-1 border rounded" />
+                  <input value="${j.waktu}" onchange="state.jadwal[${i}].waktu=this.value" class="sm:col-span-2 p-1 border rounded" />
+                  <input value="${j.kegiatan}" onchange="state.jadwal[${i}].kegiatan=this.value" class="sm:col-span-3 p-1 border rounded font-bold" />
+                  <input value="${j.lokasi}" onchange="state.jadwal[${i}].lokasi=this.value" class="sm:col-span-2 p-1 border rounded" />
+                  <input value="${j.penanggung_jawab}" onchange="state.jadwal[${i}].penanggung_jawab=this.value" class="sm:col-span-2 p-1 border rounded" />
+                  <button onclick="state.jadwal.splice(${i},1); renderDevTabContent();" class="sm:col-span-1 text-rose-600 font-bold">Hapus</button>
+                </div>
+              `).join('')}
+            </div>
+            <button onclick="saveToGoogleSheet('Jadwal', state.jadwal)" class="mt-4 px-5 py-2.5 rounded-xl bg-emerald-800 text-white font-bold">Simpan Jadwal</button>
+          </div>
+        `;
+      } else if (activeDevTab === 'berita') {
+        box.innerHTML = `
+          <div class="bg-white p-5 rounded-xl border text-xs">
+            <div class="flex justify-between items-center mb-4"><h4 class="font-bold text-base">Berita</h4>
+            <button onclick="state.berita.unshift({id:'b'+Date.now(), tanggal:new Date().toISOString().slice(0,10), judul:'Judul', ringkasan:'Ringkasan', isi:'Isi', gambar:''}); renderDevTabContent();" class="px-3 py-1 bg-gold-400 font-bold rounded">+ Tambah</button></div>
+            <div class="space-y-4">
+              ${state.berita.map((b, i) => `
+                <div class="p-3 bg-slate-50 rounded-xl border space-y-2">
+                  <div class="grid sm:grid-cols-4 gap-2">
+                    <input type="date" value="${b.tanggal}" onchange="state.berita[${i}].tanggal=this.value" class="p-1 border rounded" />
+                    <input value="${b.judul}" onchange="state.berita[${i}].judul=this.value" class="sm:col-span-3 p-1 border rounded font-bold" />
+                  </div>
+                  <input value="${b.ringkasan}" onchange="state.berita[${i}].ringkasan=this.value" class="w-full p-1 border rounded" placeholder="Ringkasan" />
+                  <textarea onchange="state.berita[${i}].isi=this.value" rows="2" class="w-full p-1 border rounded" placeholder="Isi">${b.isi}</textarea>
+                  <div class="flex gap-2 items-center">
+                    <input id="berita-img-${i}" value="${b.gambar}" onchange="state.berita[${i}].gambar=this.value" class="flex-1 p-1 border rounded" placeholder="URL Foto" />
+                    <label class="px-3 py-1.5 bg-emerald-100 font-bold rounded cursor-pointer">Upload <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(this, 'berita-img-${i}'); setTimeout(()=>state.berita[${i}].gambar=document.getElementById('berita-img-${i}').value, 500);" /></label>
+                    <button onclick="state.berita.splice(${i},1); renderDevTabContent();" class="px-3 py-1.5 bg-rose-100 text-rose-700 font-bold rounded">Hapus</button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+            <button onclick="saveToGoogleSheet('Berita', state.berita)" class="mt-4 px-5 py-2.5 rounded-xl bg-emerald-800 text-white font-bold">Simpan Berita</button>
+          </div>
+        `;
+      } else if (activeDevTab === 'struktur') {
+        box.innerHTML = `
+          <div class="bg-white p-5 rounded-xl border text-xs">
+            <div class="flex justify-between items-center mb-4"><h4 class="font-bold text-base">Struktur</h4>
+            <button onclick="state.struktur.push({id:'s'+Date.now(), jabatan:'Jabatan', nama:'Nama', kontak:'No HP', urutan:state.struktur.length+1}); renderDevTabContent();" class="px-3 py-1 bg-gold-400 font-bold rounded">+ Tambah</button></div>
+            <div class="space-y-2">
+              ${state.struktur.map((s, i) => `
+                <div class="grid sm:grid-cols-12 gap-2 items-center bg-slate-50 p-2.5 rounded border">
+                  <input type="number" value="${s.urutan}" onchange="state.struktur[${i}].urutan=Number(this.value)" class="sm:col-span-1 p-1 border rounded text-center" />
+                  <input value="${s.jabatan}" onchange="state.struktur[${i}].jabatan=this.value" class="sm:col-span-4 p-1 border rounded font-bold" />
+                  <input value="${s.nama}" onchange="state.struktur[${i}].nama=this.value" class="sm:col-span-4 p-1 border rounded" />
+                  <input value="${s.kontak}" onchange="state.struktur[${i}].kontak=this.value" class="sm:col-span-2 p-1 border rounded" />
+                  <button onclick="state.struktur.splice(${i},1); renderDevTabContent();" class="sm:col-span-1 text-rose-600 font-bold">Hapus</button>
+                </div>
+              `).join('')}
+            </div>
+            <button onclick="saveToGoogleSheet('Struktur', state.struktur)" class="mt-4 px-5 py-2.5 rounded-xl bg-emerald-800 text-white font-bold">Simpan Struktur</button>
+          </div>
+        `;
+      } else if (activeDevTab === 'settings') {
+        box.innerHTML = `
+          <div class="grid md:grid-cols-2 gap-6 text-xs">
+            <div class="bg-white p-5 rounded-xl border space-y-3">
+              <h4 class="font-bold text-base">Google Apps Script URL</h4>
+              <input id="set-gas-url" value="${getGasUrl()}" class="w-full p-2 border rounded font-mono" placeholder="https://script.google.com/.../exec" />
+              <button onclick="localStorage.setItem('ngrombeh_gas_url', document.getElementById('set-gas-url').value.trim()); alert('Disimpan!'); refreshFromSheet();" class="px-4 py-2 bg-emerald-800 text-white font-bold rounded">Simpan URL</button>
+            </div>
+            <div class="bg-white p-5 rounded-xl border space-y-3">
+              <h4 class="font-bold text-base">Ubah Kredensial Admin</h4>
+              <input id="set-new-user" value="${devAuth?.username || 'admin'}" class="w-full p-2 border rounded" placeholder="Username" />
+              <input id="set-new-pass" value="${devAuth?.password || 'ngrombeh2026'}" class="w-full p-2 border rounded" placeholder="Password" />
+              <button onclick="updateDeveloperCredentials()" class="px-4 py-2 bg-gold-500 text-emerald-950 font-bold rounded">Perbarui Akun</button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function saveLayoutForm() {
+      const sorted = [...state.layout].sort((a, b) => a.urutan - b.urutan);
+      sorted.forEach((item, idx) => {
+        item.aktif = document.getElementById(`lay-act-${idx}`).checked;
+        item.urutan = Number(document.getElementById(`lay-ord-${idx}`).value);
+        item.kolom = Number(document.getElementById(`lay-col-${idx}`).value);
+      });
+      state.layout = sorted;
+      saveToGoogleSheet('Layout', state.layout);
+    }
+
+    function saveConfigForm() {
+      state.config.nama_dusun = document.getElementById('cfg-nama').value;
+      state.config.wilayah = document.getElementById('cfg-wilayah').value;
+      state.config.tagline = document.getElementById('cfg-tagline').value;
+      state.config.luas_wilayah = document.getElementById('cfg-luas').value;
+      state.config.kode_pos = document.getElementById('cfg-kodepos').value;
+      state.config.deskripsi_profil = document.getElementById('cfg-desk').value;
+      state.config.instagram = document.getElementById('cfg-ig').value;
+      state.config.facebook = document.getElementById('cfg-fb').value;
+      state.config.youtube = document.getElementById('cfg-yt').value;
+      state.config.tiktok = document.getElementById('cfg-tt').value;
+      saveToGoogleSheet('Config', state.config);
+    }
+
+    async function updateDeveloperCredentials() {
+      const newUser = document.getElementById('set-new-user').value.trim();
+      const newPass = document.getElementById('set-new-pass').value.trim();
+      if (!newUser || !newPass) return alert('Tidak boleh kosong!');
+      await saveToGoogleSheet('Auth', { username: newUser, password: newPass });
+      devAuth = { username: newUser, password: newPass };
+      sessionStorage.setItem('ngrombeh_dev_auth', JSON.stringify(devAuth));
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (devAuth) document.getElementById('dev-toolbar').classList.remove('hidden');
+      refreshFromSheet();
+    });
+  </script>
+</body>
+</html>
